@@ -30,3 +30,6 @@ jobs:
           docker build . --target console -t subsquid/graphiql-console:${version} -t subsquid/graphiql-console:${release_tag:-next}
         env:
           RELEASE_TAG: ${{ github.event.inputs.releaseTag }}
+
+      - name: Docker push
+        run: docker push subsquid/graphiql-console --all-tags
