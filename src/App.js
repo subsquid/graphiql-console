@@ -13,7 +13,7 @@ import "./App.css";
 import type { GraphQLSchema } from "graphql";
 
 
-const GRAPHQL_API = window.GRAPHQL_API || 'http://localhost:8080/v1/graphql'
+const GRAPHQL_API = window.GRAPHQL_API || ''
 const DEFAULT_QUERY = window.GRAPHQL_DEFAULT_QUERY || ''
 
 

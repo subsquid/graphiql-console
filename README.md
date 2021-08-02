@@ -13,3 +13,10 @@ docker run \
 ```
 
 Now you can go to `http://localhost:8888` and play with your API.
+
+Alternatively, you can omit environment variables and pass all parameters via url:
+
+```
+docker run -p 8888:80 graphiql-console
+open http://localhost:8888?graphql_api=http%3A%2F%2Fserver%2Fgraphql
+```

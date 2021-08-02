@@ -26,10 +26,13 @@
       window.GRAPHQL_API = '${GRAPHQL_API}';
       window.GRAPHQL_DEFAULT_QUERY = '${GRAPHQL_DEFAULT_QUERY}';
       if (window.GRAPHQL_API.startsWith('$')) {
-        window.GRAPHQL_API = null;
+        window.GRAPHQL_API = new URLSearchParams(window.location.search).get('graphql_api');
       }
       if (window.GRAPHQL_DEFAULT_QUERY.startsWith('$')) {
-        window.GRAPHQL_DEFAULT_QUERY = null;
+        window.GRAPHQL_DEFAULT_QUERY = new URLSearchParams(window.location.search).get('graphql_default_query')
+      }
+      if (document.title.startsWith('$')) {
+        document.title = new URLSearchParams(window.location.search).get('app_title') || 'GraphiQL console'
       }
     </script>
   </head>
