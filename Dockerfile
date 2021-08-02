@@ -1,4 +1,4 @@
-FROM node:14-alpine AS asset-builder
+FROM node:14 AS asset-builder
 WORKDIR /app
 ADD package.json .
 ADD package-lock.json .
