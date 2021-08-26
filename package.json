@@ -10,7 +10,7 @@
   "scripts": {
     "build": "react-scripts build",
     "flow": "flow",
-    "prepack": "rm -r build && react-scripts build",
+    "prepack": "rm -rf build && react-scripts build",
     "prettier": "prettier --write \"src/**/*.js\" \"docs/**/*.md\" README.md",
     "start": "react-scripts start",
     "test": "react-scripts test"
