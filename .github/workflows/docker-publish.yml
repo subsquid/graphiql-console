@@ -27,7 +27,7 @@ jobs:
       - name: Docker build
         run: |
           version=$(node -p "require('./package.json').version")
-          docker build . --target console -t subsquid/graphiql-console:${version} -t subsquid/graphiql-console:${release_tag:-next}
+          docker build . --target console -t subsquid/graphiql-console:${version} -t subsquid/graphiql-console:${release:-next}
         env:
           RELEASE_TAG: ${{ github.event.inputs.releaseTag }}
 
