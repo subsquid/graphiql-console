@@ -1,5 +1,5 @@
 {
-  "name": "graphiql-console",
+  "name": "@subsquid/graphiql-console",
   "version": "0.2.0",
   "publishConfig": {
     "access": "public"
