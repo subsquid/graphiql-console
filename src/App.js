@@ -159,11 +159,6 @@ class App extends Component<{}, State> {
               title="Prettify Query (Shift-Ctrl-P)"
             />
             <GraphiQL.Button
-              onClick={() => this._graphiql.handleToggleHistory()}
-              label="History"
-              title="Show History"
-            />
-            <GraphiQL.Button
               onClick={this._handleToggleExplorer}
               label="Explorer"
               title="Toggle Explorer"
