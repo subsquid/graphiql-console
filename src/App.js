@@ -4,42 +4,26 @@ import React, { Component } from "react";
 import GraphiQL from "graphiql";
 import GraphiQLExplorer from "graphiql-explorer";
 import { buildClientSchema, getIntrospectionQuery, parse } from "graphql";
-
 import { makeDefaultArg, getDefaultScalarArgValue } from "./CustomArgs";
 
 import "graphiql/graphiql.css";
 import "./App.css";
 
 import type { GraphQLSchema } from "graphql";
+import {createGraphiQLFetcher} from "@graphiql/toolkit";
+import {createClient} from "graphql-ws";
+
+const GRAPHQL_API = window.GRAPHQL_API || "";
+const GRAPHQL_WS_URL = GRAPHQL_API.replace(/http(s)/, "wss");
+const DEFAULT_QUERY = window.GRAPHQL_DEFAULT_QUERY || "";
 
 
-const GRAPHQL_API = window.GRAPHQL_API || ''
-const DEFAULT_QUERY = window.GRAPHQL_DEFAULT_QUERY || ''
+const client = createClient({
+  webSocketImpl: WebSocket,
+  url: GRAPHQL_WS_URL
+});
 
-
-function fetcher(params: Object): Object {
-  return fetch(
-    GRAPHQL_API,
-    {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(params)
-    }
-  )
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(responseBody) {
-      try {
-        return JSON.parse(responseBody);
-      } catch (e) {
-        return responseBody;
-      }
-    });
-}
+const fetcher = createGraphiQLFetcher({ url: GRAPHQL_API, wsClient: client });
 
 type State = {
   schema: ?GraphQLSchema,
@@ -47,14 +31,28 @@ type State = {
   explorerIsOpen: boolean
 };
 
+
+async function extractResponseFromFetcher(asyncIterable) {
+  let result;
+
+  // This request returns async iterable with only one item
+  for await (const item of asyncIterable) {
+    result = item;
+  }
+
+  return result;
+}
+
 class App extends Component<{}, State> {
   _graphiql: GraphiQL;
   state = { schema: null, query: DEFAULT_QUERY, explorerIsOpen: true };
 
   componentDidMount() {
-    fetcher({
+    const response = extractResponseFromFetcher(fetcher({
       query: getIntrospectionQuery()
-    }).then(result => {
+    }));
+
+    response.then(result => {
       const editor = this._graphiql.getQueryEditor();
       editor.setOption("extraKeys", {
         ...(editor.options.extraKeys || {}),

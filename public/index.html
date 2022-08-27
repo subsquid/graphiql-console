@@ -25,8 +25,17 @@
     <script>
       window.GRAPHQL_API = '${GRAPHQL_API}';
       window.GRAPHQL_DEFAULT_QUERY = '${GRAPHQL_DEFAULT_QUERY}';
+  
+      // According to https://github.com/subsquid/graphiql-console/blob/master/README.md?plain=1#L10
+      // when running graphiql console, one might want to pass custom external URL.
+      // Meanwhile, url from openreader is supposed to be relative
+      // according to this https://github.com/subsquid/squid/blob/master/openreader/src/server.ts#L185
+      var isExternalUrl = window.GRAPHQL_API.startsWith('http');
+  
       if (window.GRAPHQL_API.startsWith('$')) {
         window.GRAPHQL_API = new URLSearchParams(window.location.search).get('graphql_api');
+      } else if (!isExternalUrl) {
+        window.GRAPHQL_API = window.location.origin + '/' +  window.GRAPHQL_API;
       }
       if (window.GRAPHQL_DEFAULT_QUERY.startsWith('$')) {
         window.GRAPHQL_DEFAULT_QUERY = new URLSearchParams(window.location.search).get('graphql_default_query')
