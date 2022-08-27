@@ -14,16 +14,25 @@ import {createGraphiQLFetcher} from "@graphiql/toolkit";
 import {createClient} from "graphql-ws";
 
 const GRAPHQL_API = window.GRAPHQL_API || "";
-const GRAPHQL_WS_URL = GRAPHQL_API.replace(/http(s)/, "wss");
 const DEFAULT_QUERY = window.GRAPHQL_DEFAULT_QUERY || "";
 
 
 const client = createClient({
   webSocketImpl: WebSocket,
-  url: GRAPHQL_WS_URL
+  url: () => {
+    let url = new URL(GRAPHQL_API, window.location.href)
+    if (url.protocol === 'https:') {
+      url.protocol = 'wss:'
+    } else {
+      url.protocol = 'ws:'
+    }
+    return url.toString()
+  }
 });
 
+
 const fetcher = createGraphiQLFetcher({ url: GRAPHQL_API, wsClient: client });
+
 
 type State = {
   schema: ?GraphQLSchema,
@@ -42,6 +51,7 @@ async function extractResponseFromFetcher(asyncIterable) {
 
   return result;
 }
+
 
 class App extends Component<{}, State> {
   _graphiql: GraphiQL;
@@ -167,5 +177,6 @@ class App extends Component<{}, State> {
     );
   }
 }
+
 
 export default App;
